@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from .forms import UserCreationForm
 
@@ -14,8 +14,9 @@ class HomeView(APIView):
 
 
 class RegisterView(APIView):
-   form = UserCreationForm
-   def post(self, request):
+    permission_classes = (AllowAny,)
+    form = UserCreationForm
+    def post(self, request):
        form = self.form(request.POST)
        if form.is_valid():
             user = form.save(commit=False)
@@ -24,7 +25,7 @@ class RegisterView(APIView):
             return Response({"message": f"Successfully created"})
        return Response({"message": "Not created"})
 
-   def get_authenticators(self):
+    def get_authenticators(self):
         return []
        
 
